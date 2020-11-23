@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rick and Morty{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 900px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { padding: 2px 6px; }
+        .example-wrapper select { width: 150px; }
+        .example-wrapper label.search { padding-left: 30px; }
+        .example-wrapper .message { text-align: center; }
+        .example-wrapper .inactive-link { pointer-events: none; cursor: default; }
+
+        .pagination { display: inline-block; }
+        .pagination a { color: black; float: left; padding: 8px 16px; text-decoration: none; }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Rick and Morty Characters ✅</h1>
+        <form method="GET" id="search" action="/index.php/characters">
+            <label>Name:</label>
+            <input type="text" id="name" name="name" value="{{form_values.name}}">
+            <label class="search">Status:</label>
+            <select name="status" id="status">
+                <option value="">-Select-</option>
+                <option value="Alive" {% if form_values.status == 'Alive' %} selected="selected" {% endif %}>Alive</option>
+                <option value="Dead" {% if form_values.status == 'Dead' %} selected="selected" {% endif %}>Dead</option>
+                <option value="Unknown" {% if form_values.status == 'Unknown' %} selected="selected" {% endif %}>Unknown</option>
+            </select>
+            <label class="search">Gender:</label>
+            <select name="gender" id="gender">
+                <option value="">-Select-</option>
+                <option value="Male" {% if form_values.gender == 'Male' %} selected="selected" {% endif %}>Male</option>
+                <option value="Female" {% if form_values.gender == 'Female' %} selected="selected" {% endif %}>Female</option>
+                <option value="Genderless" {% if form_values.gender == 'Genderless' %} selected="selected" {% endif %}>Genderless</option>
+                <option value="Unknown" {% if form_values.gender == 'Unknown' %} selected="selected" {% endif %}>Unknown</option>
+            </select><br>
+            <br>
+            <input type="hidden" id="page" name="page" value="" />
+            <input type="button" value="Submit" onClick="submitPage()">
+            <input type="button" value="Clear" onClick="clearPage()">
+        </form>
+        {% if (characters | length) %}
+            <ul>
+                {% for character in characters %}
+                      <li>
+                          <code>
+                              <a href="/index.php/characters/{{character.id}}">{{character.name}}</a>
+                          </code>
+                      </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="message">No characters have been found</div>
+        {% endif %}
+        {% if (characters | length) %}
+            {% if (form_values.prev != '' or form_values.next != '')  %}
+                <div class="pagination">
+                    {% if form_values.prev != '' %}
+                        <a href="#" onClick="paginate({{form_values.prev}})">&laquo;</a>
+                    {% endif %}
+                    <a href="#" class="inactive-link">{{form_values.current_page}}</a>
+                    {% if form_values.next != '' %}
+                        <a href="#" onClick="paginate({{form_values.next}})">&raquo;</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <script>
+        function submitPage() {
+            document.getElementById("search").submit();
+        }
+        function clearPage() {
+            document.getElementById("name").value = '';
+            document.getElementById("status").selectedIndex = -1;
+            document.getElementById("gender").selectedIndex = -1;
+            submitPage();
+        }
+        function paginate(pageNumber) {
+            document.getElementById("page").value = pageNumber;
+            submitPage();
+        }
+    </script>
+{% endblock %}

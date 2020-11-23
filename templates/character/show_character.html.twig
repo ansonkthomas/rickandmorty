@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Character{% endblock %}
+
+{% block body %}
+    <style>
+        h1 {text-align:center; font-family: arial;}
+        .card { box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); max-width: 400px; margin: auto; text-align: center; font-family: arial; padding-bottom: 10px; }
+        .card img { width: 100% }
+        .title { color: grey; font-size: 18px; }
+        .episode-header { border: none; outline: 0; display: inline-block; padding: 8px; color: white; background-color: #000; text-align: center; width: 94%; font-size: 18px; }
+        p.episode { padding-left: 10px; margin-top: 0px!important; }
+    </style>
+    {% if (character | length) %}
+        <h1>Rick & Morty Character Details</h1>
+        <div class="card">
+            <img src="{{character.image}}" alt="{{character.name}}">
+            <h1>{{character.name}}</h1>
+            <p class="title">Gender: {{character.gender}}</p>
+            <p class="title">Species: {{character.species}}</p>
+            <p class="title">Origin: {{character.origin.name}}</p>
+            <p class="episode-header">Episodes</p>
+            <p align="left" class="episode">
+                {% if episode_list.name is defined %}
+                    {{ episode_list.name }}
+                {% else %}
+                    {% for episode in episode_list %}
+                        {{ episode.name }}<br>
+                    {% endfor %}
+                {% endif %}
+            </p>
+        </div>
+    {% else %}
+        <h1>The character does not exists</h1>
+    {% endif %}
+{% endblock %}
